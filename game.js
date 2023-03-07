@@ -34,10 +34,10 @@ class Sprite{
         
         //attack Box
 
-        // if(this.isAttacking){    
+        if(this.isAttacking){    
             canvasContext.fillStyle = 'purple'
             canvasContext.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width, this.attackBox.height);
-        // }
+        }
     }
 
     update(){
@@ -124,8 +124,18 @@ const keys = {
     }
 }
 
-// let lastKey
 
+// collision
+function collision({rectangle1,rectangle2}){
+    return(
+        rectangle1.attackBox.position.x + rectangle1.attackBox.width >= rectangle2.position.x && 
+        rectangle2.attackBox.position.x <= rectangle2.position.x + rectangle2.width && 
+        rectangle1.attackBox.position.y + rectangle1.attackBox.height >= rectangle2.position.y &&
+        rectangle1.attackBox.position.y <= rectangle2.position.y + rectangle2.height
+    )
+}
+
+// let lastKey
 function animate(){
     window.requestAnimationFrame(animate)
     canvasContext.fillStyle = 'black'
@@ -162,23 +172,24 @@ function animate(){
     }
 
     // detect collision
-    if(player.attackBox.position.x + player.attackBox.width >= enemy.position.x && 
-        player.attackBox.position.x <= enemy.position.x + enemy.width && 
-        player.attackBox.position.y + player.attackBox.height >= enemy.position.y &&
-        player.attackBox.position.y <= enemy.position.y + enemy.height && 
+    if(collision({
+            rectangle1: player,
+            rectangle2: enemy
+        }) && 
         player.isAttacking){
         player.isAttacking = false
-        console.log('Hit')
+        console.log('Player Attack Successful')
     }
 
-    if(enemy.attackBox.position.x + enemy.attackBox.width >= player.position.x && 
-        enemy.attackBox.position.x <= player.position.x + player.width && 
-        enemy.attackBox.position.y + enemy.attackBox.height >= player.position.y &&
-        enemy.attackBox.position.y <= player.position.y + player.height && 
+    if(collision({
+            rectangle1: enemy,
+            rectangle2: player
+        }) && 
         enemy.isAttacking){
         enemy.isAttacking = false
-        console.log('Hit')
+        console.log('Enemy Attack Successful')
     }
+
 }
 animate()
 
@@ -202,8 +213,8 @@ window.addEventListener('keydown', (event) => {
             break;
         case ' ':
             player.attack()
+            case 'ArrowUp':
             break;
-        case 'ArrowUp':
             keys.ArrowUp.pressed = true;
             enemy.lastKey = 'ArrowUp';
             break;
@@ -224,7 +235,6 @@ window.addEventListener('keydown', (event) => {
         default:
             break;
     }
-    console.log(event.key)
 })
 
 window.addEventListener('keyup', (event) => {
@@ -256,5 +266,4 @@ window.addEventListener('keyup', (event) => {
         default:
             break;
     }
-    console.log(event.key)
 })
