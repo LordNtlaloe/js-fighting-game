@@ -26,6 +26,7 @@ class Sprite{
             height: 45,
         }
         this.color = color
+        this.health = 100
     }
 
     draw(){
@@ -178,7 +179,8 @@ function animate(){
         }) && 
         player.isAttacking){
         player.isAttacking = false
-        console.log('Player Attack Successful')
+        enemy.health -= 10
+        document.querySelector('#enemy-health-bar').style.width = enemy.health + '%'
     }
 
     if(collision({
@@ -187,7 +189,8 @@ function animate(){
         }) && 
         enemy.isAttacking){
         enemy.isAttacking = false
-        console.log('Enemy Attack Successful')
+        player.health -= 10
+        document.querySelector('#player-health-bar').style.width = player.health + '%'
     }
 
 }
@@ -212,9 +215,9 @@ window.addEventListener('keydown', (event) => {
             player.lastKey = 's';
             break;
         case ' ':
-            player.attack()
-            case 'ArrowUp':
+            player.attack();
             break;
+        case 'ArrowUp':
             keys.ArrowUp.pressed = true;
             enemy.lastKey = 'ArrowUp';
             break;
